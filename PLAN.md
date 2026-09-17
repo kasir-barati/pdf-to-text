@@ -6,8 +6,8 @@ A small web app where a user uploads a PDF and gets back its extracted text cont
 
 ## Acceptance Criteria
 
-- [ ] Web interface to upload a PDF file
-- [ ] Output showing the extracted text content of the PDF
+- [x] Web interface to upload a PDF file
+- [x] Output showing the extracted text content of the PDF
 - [ ] Live, viewable demo (GitHub Pages)
 
 ## Architecture

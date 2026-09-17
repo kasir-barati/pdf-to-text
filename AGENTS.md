@@ -1,6 +1,6 @@
 # Project Summary
 
-CLAUDE CODE PLEASE FILL THIS SECTION
+A client-side-only React + Vite app that extracts text from a user-uploaded PDF using `pdfjs-dist`, with no backend. Deployed to GitHub Pages via GitHub Actions.
 
 # Code Standards & Guidelines
 
