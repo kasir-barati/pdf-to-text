@@ -3,6 +3,7 @@ import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import type { TextItem } from 'pdfjs-dist/types/src/display/api';
 
 import { config } from './config';
+import { logger } from './logger';
 
 GlobalWorkerOptions.workerSrc = pdfWorker;
 
@@ -11,46 +12,53 @@ export class PdfExtractionError extends Error {}
 export async function extractText(file: File): Promise<string> {
   const buffer = await file.arrayBuffer();
 
-  let pageCount: number;
-  let doc: Awaited<ReturnType<typeof getDocument>['promise']>;
+  const loadingTask = getDocument({ data: buffer });
 
   try {
-    doc = await getDocument({ data: buffer }).promise;
-    pageCount = doc.numPages;
-  } catch {
-    throw new PdfExtractionError(
-      'Could not read this file as a PDF. It may be corrupt or not a valid PDF.',
-    );
-  }
-
-  if (pageCount > config.maxPageCount) {
-    throw new PdfExtractionError(
-      `This PDF has ${pageCount} pages, exceeding the ${config.maxPageCount} page limit.`,
-    );
-  }
-
-  const pageTexts: string[] = [];
-  let characterCount = 0;
-
-  for (let pageNumber = 1; pageNumber <= pageCount; pageNumber++) {
-    const page = await doc.getPage(pageNumber);
-    const content = await page.getTextContent();
-    const items = content.items.filter(
-      (item): item is TextItem => 'str' in item,
-    );
-    const pageText = joinTextItems(items);
-
-    characterCount += pageText.length;
-    if (characterCount > config.maxCharacterCount) {
+    const doc = await loadingTask.promise.catch((err: unknown) => {
+      logger.error('Failed to load PDF document', err);
       throw new PdfExtractionError(
-        `This PDF's extracted text exceeds the ${config.maxCharacterCount.toLocaleString()} character limit.`,
+        'Could not read this file as a PDF. It may be corrupt or not a valid PDF.',
+      );
+    });
+    const pageCount = doc.numPages;
+
+    if (pageCount > config.maxPageCount) {
+      throw new PdfExtractionError(
+        `This PDF has ${pageCount} pages, exceeding the ${config.maxPageCount} page limit.`,
       );
     }
 
-    pageTexts.push(pageText);
-  }
+    const pageTexts: string[] = [];
+    let characterCount = 0;
 
-  return pageTexts.join('\n\n').trim();
+    for (let pageNumber = 1; pageNumber <= pageCount; pageNumber++) {
+      const page = await doc.getPage(pageNumber);
+      const content = await page.getTextContent();
+      const items = content.items.filter(
+        (item): item is TextItem => 'str' in item,
+      );
+      const pageText = joinTextItems(items);
+
+      characterCount += pageText.length;
+      if (characterCount > config.maxCharacterCount) {
+        throw new PdfExtractionError(
+          `This PDF's extracted text exceeds the ${config.maxCharacterCount.toLocaleString()} character limit.`,
+        );
+      }
+
+      pageTexts.push(pageText);
+    }
+
+    return pageTexts.join('\n\n').trim();
+  } catch (err) {
+    if (!(err instanceof PdfExtractionError)) {
+      logger.error('Failed to extract text', err);
+    }
+    throw err;
+  } finally {
+    await loadingTask.destroy();
+  }
 }
 
 /**
