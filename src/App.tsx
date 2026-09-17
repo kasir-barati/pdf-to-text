@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { FileUpload } from './components/FileUpload';
+import { ImportantNotes } from './components/ImportantNotes';
 import { TextOutput } from './components/TextOutput';
 import { extractText, PdfExtractionError } from './lib/extractText';
 
@@ -35,17 +36,26 @@ function App() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl flex-col items-center gap-6 p-8">
+    <main className="mx-auto flex min-h-screen max-w-5xl flex-col items-center gap-6 p-8">
       <h1 className="text-2xl font-semibold">PDF Text Extractor</h1>
-      <FileUpload onFile={handleFile} />
 
-      {status.kind === 'loading' && (
-        <p className="text-sm text-gray-500">Extracting text…</p>
-      )}
-      {status.kind === 'error' && (
-        <p className="text-sm text-red-600">{status.message}</p>
-      )}
-      {status.kind === 'done' && <TextOutput text={status.text} />}
+      <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:justify-center">
+        <div className="flex flex-1 flex-col items-center gap-6">
+          <FileUpload onFile={handleFile} />
+
+          {status.kind === 'loading' && (
+            <p className="text-sm text-gray-500">Extracting text…</p>
+          )}
+          {status.kind === 'error' && (
+            <p className="text-sm text-red-600">{status.message}</p>
+          )}
+          {status.kind === 'done' && (
+            <TextOutput text={status.text} />
+          )}
+        </div>
+
+        <ImportantNotes />
+      </div>
     </main>
   );
 }

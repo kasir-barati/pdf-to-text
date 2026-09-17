@@ -41,4 +41,23 @@ describe('FileUpload', () => {
       screen.getByText('Please select a PDF file.'),
     ).toBeInTheDocument();
   });
+
+  it('rejects a PDF larger than the size limit and shows an error', () => {
+    const onFile = vi.fn();
+    render(<FileUpload onFile={onFile} />);
+    const file = new File(['%PDF-1.4'], 'doc.pdf', {
+      type: 'application/pdf',
+    });
+    Object.defineProperty(file, 'size', { value: 21 * 1024 * 1024 });
+
+    selectFile(
+      screen.getByLabelText('Choose PDF file', { selector: 'input' }),
+      file,
+    );
+
+    expect(onFile).not.toHaveBeenCalled();
+    expect(
+      screen.getByText('File is too large. Max size is 20 MB.'),
+    ).toBeInTheDocument();
+  });
 });

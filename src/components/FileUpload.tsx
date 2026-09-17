@@ -1,5 +1,7 @@
 import { useState, type ChangeEvent } from 'react';
 
+import { config } from '../lib/config';
+
 interface FileUploadProps {
   onFile: (file: File) => void;
 }
@@ -16,6 +18,14 @@ export function FileUpload({ onFile }: FileUploadProps) {
 
     if (file.type !== 'application/pdf') {
       setError('Please select a PDF file.');
+      return;
+    }
+
+    const maxBytes = config.maxFileSizeMb * 1024 * 1024;
+    if (file.size > maxBytes) {
+      setError(
+        `File is too large. Max size is ${config.maxFileSizeMb} MB.`,
+      );
       return;
     }
 

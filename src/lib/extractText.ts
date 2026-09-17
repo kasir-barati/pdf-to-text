@@ -2,6 +2,8 @@ import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist';
 import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import type { TextItem } from 'pdfjs-dist/types/src/display/api';
 
+import { config } from './config';
+
 GlobalWorkerOptions.workerSrc = pdfWorker;
 
 export class PdfExtractionError extends Error {}
@@ -11,6 +13,7 @@ export async function extractText(file: File): Promise<string> {
 
   let pageCount: number;
   let doc: Awaited<ReturnType<typeof getDocument>['promise']>;
+
   try {
     doc = await getDocument({ data: buffer }).promise;
     pageCount = doc.numPages;
@@ -20,7 +23,14 @@ export async function extractText(file: File): Promise<string> {
     );
   }
 
+  if (pageCount > config.maxPageCount) {
+    throw new PdfExtractionError(
+      `This PDF has ${pageCount} pages, exceeding the ${config.maxPageCount} page limit.`,
+    );
+  }
+
   const pageTexts: string[] = [];
+
   for (let pageNumber = 1; pageNumber <= pageCount; pageNumber++) {
     const page = await doc.getPage(pageNumber);
     const content = await page.getTextContent();

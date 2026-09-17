@@ -7,6 +7,9 @@ vi.mock('pdfjs-dist', () => ({
 vi.mock('pdfjs-dist/build/pdf.worker.min.mjs?url', () => ({
   default: 'worker-url',
 }));
+vi.mock('./config', () => ({
+  config: { maxFileSizeMb: 20, maxPageCount: 2 },
+}));
 
 import { getDocument } from 'pdfjs-dist';
 
@@ -88,6 +91,17 @@ describe('extractText', () => {
   it('throws PdfExtractionError for a file pdfjs cannot parse', async () => {
     vi.mocked(getDocument).mockReturnValue({
       promise: Promise.reject(new Error('bad pdf')),
+    } as never);
+
+    await expect(extractText(fakeFile())).rejects.toThrow(
+      PdfExtractionError,
+    );
+  });
+
+  it('throws PdfExtractionError when the page count exceeds the limit', async () => {
+    const doc = { numPages: 3, getPage: vi.fn() };
+    vi.mocked(getDocument).mockReturnValue({
+      promise: Promise.resolve(doc),
     } as never);
 
     await expect(extractText(fakeFile())).rejects.toThrow(
