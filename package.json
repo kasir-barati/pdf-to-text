@@ -7,8 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "format": "oxfmt .",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint-staged": "lint-staged",
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
@@ -24,8 +27,11 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "husky": "^9.1.7",
     "jsdom": "^30.1.0",
-    "oxlint": "^1.81.0",
+    "lint-staged": "^17.5.1",
+    "oxfmt": "^0.68.0",
+    "oxlint": "^1.83.0",
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
     "vitest": "^5.0.1"

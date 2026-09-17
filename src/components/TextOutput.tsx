@@ -1,16 +1,16 @@
-import { useState } from 'react'
+import { useState } from 'react';
 
 interface TextOutputProps {
-  text: string
+  text: string;
 }
 
 export function TextOutput({ text }: TextOutputProps) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
-    await navigator.clipboard.writeText(text)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
@@ -28,5 +28,5 @@ export function TextOutput({ text }: TextOutputProps) {
         {text}
       </pre>
     </div>
-  )
+  );
 }
