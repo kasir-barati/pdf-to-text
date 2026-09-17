@@ -8,5 +8,6 @@
   "endOfLine": "lf",
   "sortPackageJson": false,
   "sortImports": true,
+  "sortTailwindcss": true,
   "ignorePatterns": ["dist"]
 }

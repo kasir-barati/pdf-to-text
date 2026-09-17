@@ -24,7 +24,7 @@ export function TextOutput({ text }: TextOutputProps) {
           {copied ? 'Copied!' : 'Copy to clipboard'}
         </button>
       </div>
-      <pre className="max-h-[60vh] w-full overflow-auto whitespace-pre-wrap rounded-md border border-gray-300 p-4 text-left text-sm">
+      <pre className="max-h-[60vh] w-full overflow-auto rounded-md border border-gray-300 p-4 text-left text-sm whitespace-pre-wrap">
         {text}
       </pre>
     </section>
