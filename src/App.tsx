@@ -4,6 +4,7 @@ import { FileUpload } from './components/FileUpload';
 import { ImportantNotes } from './components/ImportantNotes';
 import { TextOutput } from './components/TextOutput';
 import { extractText, PdfExtractionError } from './lib/extractText';
+import { logger } from './lib/logger';
 
 type Status =
   | { kind: 'idle' }
@@ -27,6 +28,9 @@ function App() {
       }
       setStatus({ kind: 'done', text });
     } catch (err) {
+      if (!(err instanceof PdfExtractionError)) {
+        logger.error('Unexpected extraction error', err);
+      }
       const message =
         err instanceof PdfExtractionError
           ? err.message

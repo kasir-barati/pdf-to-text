@@ -1,16 +1,25 @@
 import { useState } from 'react';
 
+import { logger } from '../lib/logger';
+
 interface TextOutputProps {
   text: string;
 }
 
+type CopyState = 'idle' | 'copied' | 'failed';
+
 export function TextOutput({ text }: TextOutputProps) {
-  const [copied, setCopied] = useState(false);
+  const [copyState, setCopyState] = useState<CopyState>('idle');
 
   async function handleCopy() {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopyState('copied');
+    } catch (err) {
+      logger.error('Failed to copy text to clipboard', err);
+      setCopyState('failed');
+    }
+    setTimeout(() => setCopyState('idle'), 2000);
   }
 
   return (
@@ -24,7 +33,9 @@ export function TextOutput({ text }: TextOutputProps) {
           onClick={handleCopy}
           className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm font-medium hover:bg-gray-100"
         >
-          {copied ? 'Copied!' : 'Copy to clipboard'}
+          {copyState === 'copied' && 'Copied!'}
+          {copyState === 'failed' && 'Copy failed'}
+          {copyState === 'idle' && 'Copy to clipboard'}
         </button>
       </div>
       <pre className="max-h-[60vh] w-full overflow-auto p-4 text-left text-sm whitespace-pre-wrap">
