@@ -18,6 +18,8 @@ Everything runs client-side, in the browser — no backend or file upload to a s
 
 Only the existing text layer is extracted. Scanned or image-only PDFs (no embedded text) return no text — that would require OCR, which is out of scope for this app.
 
+Tables are not recognized as such: their cell text is extracted in reading order without preserving column/row structure.
+
 ## Development
 
 ```

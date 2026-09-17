@@ -24,12 +24,38 @@ export async function extractText(file: File): Promise<string> {
   for (let pageNumber = 1; pageNumber <= pageCount; pageNumber++) {
     const page = await doc.getPage(pageNumber);
     const content = await page.getTextContent();
-    const pageText = content.items
-      .filter((item): item is TextItem => 'str' in item)
-      .map((item) => item.str)
-      .join(' ');
-    pageTexts.push(pageText);
+    const items = content.items.filter(
+      (item): item is TextItem => 'str' in item,
+    );
+    pageTexts.push(joinTextItems(items));
   }
 
   return pageTexts.join('\n\n').trim();
+}
+
+/**
+ * Joins a page's text items, using each item's line position to tell a
+ * wrapped line (single newline) from a paragraph break (blank line): a
+ * vertical gap much bigger than the line's own height means a break.
+ */
+function joinTextItems(items: TextItem[]): string {
+  let pageText = '';
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    pageText += item.str;
+
+    const next = items[i + 1];
+    if (!next) {
+      continue;
+    }
+
+    if (!item.hasEOL) {
+      pageText += ' ';
+      continue;
+    }
+
+    const lineGap = Math.abs(item.transform[5] - next.transform[5]);
+    pageText += lineGap > item.height * 1.5 ? '\n\n' : '\n';
+  }
+  return pageText;
 }

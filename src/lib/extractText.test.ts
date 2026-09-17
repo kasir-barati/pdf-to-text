@@ -39,6 +39,51 @@ describe('extractText', () => {
     expect(text).toBe('page1-a page1-b\n\npage2-a page2-b');
   });
 
+  it('preserves paragraph breaks as blank lines and wraps lines within a paragraph', async () => {
+    const doc = {
+      numPages: 1,
+      getPage: vi.fn(async () => ({
+        getTextContent: async () => ({
+          items: [
+            {
+              str: 'line one',
+              hasEOL: true,
+              height: 10,
+              transform: [0, 0, 0, 0, 0, 100],
+            },
+            {
+              str: 'line two',
+              hasEOL: true,
+              height: 10,
+              transform: [0, 0, 0, 0, 0, 90],
+            },
+            {
+              str: 'new paragraph',
+              hasEOL: false,
+              height: 10,
+              transform: [0, 0, 0, 0, 0, 60],
+            },
+            {
+              str: 'last line',
+              hasEOL: false,
+              height: 10,
+              transform: [0, 0, 0, 0, 0, 50],
+            },
+          ],
+        }),
+      })),
+    };
+    vi.mocked(getDocument).mockReturnValue({
+      promise: Promise.resolve(doc),
+    } as never);
+
+    const text = await extractText(fakeFile());
+
+    expect(text).toBe(
+      'line one\nline two\n\nnew paragraph last line',
+    );
+  });
+
   it('throws PdfExtractionError for a file pdfjs cannot parse', async () => {
     vi.mocked(getDocument).mockReturnValue({
       promise: Promise.reject(new Error('bad pdf')),
