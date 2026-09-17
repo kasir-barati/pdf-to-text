@@ -1,5 +1,6 @@
 const DEFAULT_MAX_FILE_SIZE_MB = 20;
 const DEFAULT_MAX_PAGE_COUNT = 50;
+const DEFAULT_MAX_CHARACTER_COUNT = 500_000;
 
 function parsePositiveInt(
   value: string | undefined,
@@ -17,5 +18,9 @@ export const config = {
   maxPageCount: parsePositiveInt(
     import.meta.env.VITE_MAX_PAGE_COUNT,
     DEFAULT_MAX_PAGE_COUNT,
+  ),
+  maxCharacterCount: parsePositiveInt(
+    import.meta.env.VITE_MAX_CHARACTER_COUNT,
+    DEFAULT_MAX_CHARACTER_COUNT,
   ),
 };

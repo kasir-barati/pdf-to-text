@@ -30,6 +30,7 @@ export async function extractText(file: File): Promise<string> {
   }
 
   const pageTexts: string[] = [];
+  let characterCount = 0;
 
   for (let pageNumber = 1; pageNumber <= pageCount; pageNumber++) {
     const page = await doc.getPage(pageNumber);
@@ -37,7 +38,16 @@ export async function extractText(file: File): Promise<string> {
     const items = content.items.filter(
       (item): item is TextItem => 'str' in item,
     );
-    pageTexts.push(joinTextItems(items));
+    const pageText = joinTextItems(items);
+
+    characterCount += pageText.length;
+    if (characterCount > config.maxCharacterCount) {
+      throw new PdfExtractionError(
+        `This PDF's extracted text exceeds the ${config.maxCharacterCount.toLocaleString()} character limit.`,
+      );
+    }
+
+    pageTexts.push(pageText);
   }
 
   return pageTexts.join('\n\n').trim();
