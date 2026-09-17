@@ -7,5 +7,6 @@
   "semi": true,
   "endOfLine": "lf",
   "sortPackageJson": false,
+  "sortImports": true,
   "ignorePatterns": ["dist"]
 }

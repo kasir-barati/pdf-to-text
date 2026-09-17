@@ -9,6 +9,7 @@ vi.mock('pdfjs-dist/build/pdf.worker.min.mjs?url', () => ({
 }));
 
 import { getDocument } from 'pdfjs-dist';
+
 import { extractText, PdfExtractionError } from './extractText';
 
 function fakeFile(): File {

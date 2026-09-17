@@ -1,6 +1,6 @@
 import { GlobalWorkerOptions, getDocument } from 'pdfjs-dist';
-import type { TextItem } from 'pdfjs-dist/types/src/display/api';
 import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+import type { TextItem } from 'pdfjs-dist/types/src/display/api';
 
 GlobalWorkerOptions.workerSrc = pdfWorker;
 
