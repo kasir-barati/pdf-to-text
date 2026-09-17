@@ -7,6 +7,7 @@
 - IMPORTANT: Avoid overly defensive programming; avoid insistence checks; only manage exceptions when necessary.
 - Use uv; ALWAYS uv run xxx NEVER python3 xxx.
 - Use latest version of libraries and idiomatic approaches as of today.
+- Use semantic HTML elements (`main`, `section`, `header`, `nav`, etc.) when one matches the element's role. Reserve `div`/`span` for elements that exist purely for layout or styling with no semantic meaning.
 
 # Testing
 

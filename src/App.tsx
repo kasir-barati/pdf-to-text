@@ -34,7 +34,7 @@ function App() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-3xl flex-col items-center gap-6 p-8">
+    <main className="mx-auto flex min-h-screen max-w-3xl flex-col items-center gap-6 p-8">
       <h1 className="text-2xl font-semibold">PDF Text Extractor</h1>
       <FileUpload onFile={handleFile} />
 
@@ -45,7 +45,7 @@ function App() {
         <p className="text-sm text-red-600">{status.message}</p>
       )}
       {status.kind === 'done' && <TextOutput text={status.text} />}
-    </div>
+    </main>
   );
 }
 

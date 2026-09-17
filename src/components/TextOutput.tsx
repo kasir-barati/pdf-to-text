@@ -14,7 +14,7 @@ export function TextOutput({ text }: TextOutputProps) {
   }
 
   return (
-    <div className="flex w-full flex-col gap-2">
+    <section className="flex w-full flex-col gap-2">
       <div className="flex justify-end">
         <button
           type="button"
@@ -27,6 +27,6 @@ export function TextOutput({ text }: TextOutputProps) {
       <pre className="max-h-[60vh] w-full overflow-auto whitespace-pre-wrap rounded-md border border-gray-300 p-4 text-left text-sm">
         {text}
       </pre>
-    </div>
+    </section>
   );
 }
