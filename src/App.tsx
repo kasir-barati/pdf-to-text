@@ -40,14 +40,18 @@ function App() {
       <h1 className="text-2xl font-semibold">PDF Text Extractor</h1>
 
       <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:justify-center">
-        <div className="flex flex-1 flex-col items-center gap-6">
+        <div className="flex w-full flex-1 flex-col gap-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
           <FileUpload onFile={handleFile} />
 
           {status.kind === 'loading' && (
-            <p className="text-sm text-gray-500">Extracting text…</p>
+            <p className="text-center text-sm text-gray-500">
+              Extracting text…
+            </p>
           )}
           {status.kind === 'error' && (
-            <p className="text-sm text-red-600">{status.message}</p>
+            <p className="text-center text-sm text-red-600">
+              {status.message}
+            </p>
           )}
           {status.kind === 'done' && (
             <TextOutput text={status.text} />
