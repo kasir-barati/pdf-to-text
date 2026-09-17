@@ -1,4 +1,8 @@
 {
-  "*.{ts,tsx,js,jsx}": ["oxlint --fix", "oxfmt"],
+  "*.{ts,tsx,js,jsx}": [
+    "oxlint --fix",
+    "oxfmt",
+    "vitest related --run"
+  ],
   "*.{json,md,yml,yaml,css}": ["oxfmt"]
 }
