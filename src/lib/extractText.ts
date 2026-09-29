@@ -40,7 +40,9 @@ export async function extractText(file: File): Promise<string> {
       const items = content.items.filter(
         (item): item is TextItem => 'str' in item,
       );
-      const pageText = joinTextItems(items);
+      const pageText = normalizeArabicPresentationForms(
+        joinTextItems(items),
+      );
 
       characterCount += pageText.length;
       if (characterCount > config.maxCharacterCount) {
@@ -64,6 +66,44 @@ export async function extractText(file: File): Promise<string> {
 }
 
 /**
+ * @description
+ * Arabic/Persian PDFs embed pre-shaped glyphs (isolated/initial/medial/final forms) instead of base letters; NFKC maps them back to the base letters.
+ */
+function normalizeArabicPresentationForms(text: string): string {
+  const ARABIC_PRESENTATION_FORMS = /[\uFB50-\uFDFF\uFE70-\uFEFF]+/g;
+
+  return text.replace(ARABIC_PRESENTATION_FORMS, (run) =>
+    run.normalize('NFKC'),
+  );
+}
+
+/**
+ * @description
+ * Arabic/Persian PDFs emit one item per glyph, so a space is only added when the items are on different lines or visibly apart.
+ * Previously the letters were spaced-out in Arabic and Persian PDF files.
+ */
+function needsSpaceBetween(item: TextItem, next: TextItem): boolean {
+  if (/\s$/.test(item.str) || /^\s/.test(next.str)) {
+    return false;
+  }
+
+  const height = Math.max(item.height, next.height);
+  const sameLine =
+    Math.abs(item.transform[5] - next.transform[5]) < height * 0.5;
+
+  if (!sameLine) {
+    return true;
+  }
+
+  const gap = Math.max(
+    next.transform[4] - (item.transform[4] + item.width),
+    item.transform[4] - (next.transform[4] + next.width),
+  );
+
+  return gap > height * 0.1;
+}
+
+/**
  * Joins a page's text items, using each item's line position to tell a
  * wrapped line (single newline) from a paragraph break (blank line): a
  * vertical gap much bigger than the line's own height means a break.
@@ -80,7 +120,9 @@ function joinTextItems(items: TextItem[]): string {
     }
 
     if (!item.hasEOL) {
-      pageText += ' ';
+      if (needsSpaceBetween(item, next)) {
+        pageText += ' ';
+      }
       continue;
     }
 
