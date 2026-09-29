@@ -11,7 +11,9 @@ export function FileUpload({ onFile }: FileUploadProps) {
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
+
     event.target.value = '';
+
     if (!file) {
       return;
     }

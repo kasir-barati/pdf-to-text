@@ -4,7 +4,10 @@ import { describe, expect, it, vi } from 'vitest';
 import { FileUpload } from './FileUpload';
 
 function selectFile(input: HTMLElement, file: File) {
-  Object.defineProperty(input, 'files', { value: [file] });
+  Object.defineProperty(input, 'files', {
+    value: [file],
+    configurable: true,
+  });
   fireEvent.change(input);
 }
 
@@ -21,6 +24,24 @@ describe('FileUpload', () => {
       file,
     );
 
+    expect(onFile).toHaveBeenCalledWith(file);
+  });
+
+  it('allows re-selecting the same file', () => {
+    const onFile = vi.fn();
+    render(<FileUpload onFile={onFile} />);
+    const file = new File(['%PDF-1.4'], 'doc.pdf', {
+      type: 'application/pdf',
+    });
+    const input = screen.getByLabelText('Choose PDF file', {
+      selector: 'input',
+    }) as HTMLInputElement;
+
+    selectFile(input, file); // Selection
+    expect(onFile).toHaveBeenCalledWith(file);
+    expect(input.value).toBe(''); // Verify the input value was cleared
+    onFile.mockClear();
+    selectFile(input, file); // Reselection
     expect(onFile).toHaveBeenCalledWith(file);
   });
 
