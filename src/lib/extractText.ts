@@ -16,7 +16,9 @@ export async function extractText(file: File): Promise<string> {
 
   try {
     const doc = await loadingTask.promise.catch((err: unknown) => {
+      // if the error object contains raw PDF data, then the retention policy of logs becomes more relevant
       logger.error('Failed to load PDF document', err);
+
       throw new PdfExtractionError(
         'Could not read this file as a PDF. It may be corrupt or not a valid PDF.',
       );
