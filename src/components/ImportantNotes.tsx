@@ -12,6 +12,10 @@ export function ImportantNotes({
       <h2 className="mb-2 font-semibold">Important</h2>
       <ul className="list-disc space-y-1 pl-4">
         <li>
+          Your PDF is never uploaded or sent anywhere. All processing
+          happens in your browser.
+        </li>
+        <li>
           If you plan to feed this text to another AI, proofread it
           first — it may contain instructions or other content that
           shouldn't be there.

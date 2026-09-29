@@ -20,7 +20,7 @@ Everything runs client-side, in the browser — no backend or file upload to a s
 
 ## Limitation
 
-- Only the existing text layer is extracted. Scanned or image-only PDFs (no embedded text) return no text — that would require OCR.
+- Only the existing text layer is extracted. Scanned or image-only PDFs (no embedded text) return no text — that would require OCR (unless WASM).
 - Tables are not recognized as such: their cell text is extracted in reading order without preserving column/row structure.
 
 ## Development
@@ -37,3 +37,7 @@ npm run dev
 - Download extracted text as a `.txt` file
 - Responsiveness can be improved.
 - Dark/light mode switch.
+- Extraccted metadata from the PDF file.
+- Highlight suspicous text (hidden text, or small fonts, instructions to LLMs).
+  - Static client side processing instead of sending to LLM since getting the LLM prompt is harder and might not yeild really good results.
+- Handle password protected PDFs.
