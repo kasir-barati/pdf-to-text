@@ -1,8 +1,14 @@
 import { config } from '../lib/config';
 
-export function ImportantNotes() {
+export function ImportantNotes({
+  className = '',
+}: {
+  className?: string;
+}) {
   return (
-    <aside className="w-full shrink-0 rounded-md border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 sm:sticky sm:top-8 sm:w-72">
+    <aside
+      className={`w-full shrink-0 rounded-md border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 sm:sticky sm:top-8 sm:w-72 ${className}`}
+    >
       <h2 className="mb-2 font-semibold">Important</h2>
       <ul className="list-disc space-y-1 pl-4">
         <li>

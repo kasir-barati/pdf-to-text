@@ -43,26 +43,30 @@ function App() {
     <main className="mx-auto flex min-h-screen max-w-5xl flex-col items-center gap-6 p-8">
       <h1 className="text-2xl font-semibold">PDF Text Extractor</h1>
 
-      <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-start sm:justify-center">
-        <div className="flex w-full flex-1 flex-col gap-4 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="grid w-full min-w-0 gap-6 sm:grid-cols-[minmax(0,1fr)_18rem] sm:items-start sm:justify-center">
+        <div className="order-1 min-w-0 rounded-lg border border-gray-200 bg-white p-6 shadow-sm sm:col-start-1 sm:row-start-1">
           <FileUpload onFile={handleFile} />
-
-          {status.kind === 'loading' && (
-            <p className="text-center text-sm text-gray-500">
-              Extracting text…
-            </p>
-          )}
-          {status.kind === 'error' && (
-            <p className="text-center text-sm text-red-600">
-              {status.message}
-            </p>
-          )}
-          {status.kind === 'done' && (
-            <TextOutput text={status.text} />
-          )}
         </div>
 
-        <ImportantNotes />
+        <ImportantNotes className="order-2 sm:col-start-2 sm:row-span-2 sm:row-start-1" />
+
+        {status.kind !== 'idle' && (
+          <div className="order-3 min-w-0 rounded-lg border border-gray-200 bg-white p-6 shadow-sm sm:col-start-1 sm:row-start-2">
+            {status.kind === 'loading' && (
+              <p className="text-center text-sm text-gray-500">
+                Extracting text…
+              </p>
+            )}
+            {status.kind === 'error' && (
+              <p className="text-center text-sm text-red-600">
+                {status.message}
+              </p>
+            )}
+            {status.kind === 'done' && (
+              <TextOutput text={status.text} />
+            )}
+          </div>
+        )}
       </div>
     </main>
   );

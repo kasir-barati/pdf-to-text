@@ -38,7 +38,7 @@ export function TextOutput({ text }: TextOutputProps) {
           {copyState === 'idle' && 'Copy to clipboard'}
         </button>
       </div>
-      <pre className="max-h-[60vh] w-full overflow-auto p-4 text-left text-sm whitespace-pre-wrap">
+      <pre className="max-h-[60vh] w-full overflow-auto p-4 text-left text-sm break-words whitespace-pre-wrap">
         {text}
       </pre>
     </section>
