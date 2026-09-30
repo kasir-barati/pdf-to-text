@@ -41,3 +41,4 @@ npm run dev
 - Highlight suspicous text (hidden text, or small fonts, instructions to LLMs).
   - Static client side processing instead of sending to LLM since getting the LLM prompt is harder and might not yeild really good results.
 - Handle password protected PDFs.
+- Stream the extracted text instead of waiting for the entire document to be processed.
