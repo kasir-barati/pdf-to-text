@@ -1,5 +1,6 @@
+// At most 20 MB, with text + simple charts/tables + a couple of normal images
 const DEFAULT_MAX_FILE_SIZE_MB = 20;
-const DEFAULT_MAX_PAGE_COUNT = 50;
+const DEFAULT_MAX_PAGE_COUNT = 400;
 const DEFAULT_MAX_CHARACTER_COUNT = 500_000;
 
 function parsePositiveInt(
